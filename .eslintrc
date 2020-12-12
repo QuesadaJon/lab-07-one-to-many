@@ -19,10 +19,10 @@
     "eslint:recommended"
   ],
   "rules": {
-    "no-console": 0,
+    "no-console": "warn",
     "indent": [
       "error",
-      4,
+      2,
       {
         "SwitchCase": 1
       }
