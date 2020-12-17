@@ -89,6 +89,6 @@ describe('app test', () => {
     const response = await request(app)
       .delete(`/api/v1/phones/${phone.id}`);
 
-    expect(response.text).toEqual(`phone with id of ${phone.id} has been deleted`);
+    expect(response.body).toEqual(phone);
   });
 });
