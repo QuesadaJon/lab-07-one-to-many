@@ -3,6 +3,7 @@ const request = require('supertest');
 const pool = require('../lib/utils/pool');
 const app = require('../lib/app');
 const Phone = require('../lib/models/phones');
+const Color = require('../lib/models/color');
 
 describe('app test', () => {
   beforeEach(() => {
@@ -30,13 +31,26 @@ describe('app test', () => {
     });
   });
 
-  it('finds a phone by id via GET', async() => {
-    const phone = await Phone.insert({ name: 'boogie', brand: 'snot', model: 't10045' });
+  it('finds a phone by id and associated colors via GET', async() => {
+    const phone = await Phone.insert({ 
+      name: 'boogie', 
+      brand: 'snot', 
+      model: 't10045' 
+    });
 
+    const colors = await Promise.all([
+      { color: 'blue', phoneId: phone.id },
+      { color: 'green', phoneId: phone.id },
+      { color: 'purple', phoneId: phone.id }
+    ].map(color => Color.insert(color)));
+    
     const response = await request(app)
       .get(`/api/v1/phones/${phone.id}`);
         
-    expect(response.body).toEqual(phone);
+    expect(response.body).toEqual({
+      ...phone,
+      colors: expect.arrayContaining(colors)
+    });
   });
 
   it('finds all phones via GET', async() => {
